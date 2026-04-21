@@ -41,7 +41,8 @@ yay -S --needed --noconfirm \
     zsh \
     zsh-theme-powerlevel10k-git \
     zsh-syntax-highlighting \
-    zsh-autosuggestions
+    zsh-autosuggestions \
+    zoxide
 
 echo "📦 Instalando herramientas especiales (Quickshell y Wallpaper Engine)..."
 # Quickshell y linux-wallpaperengine están en AUR y pueden tardar un ratito en compilarse
