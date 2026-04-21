@@ -1,0 +1,360 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "JetBrains Mono Nerd Font";
+    font-weight: 700;
+    font-size: 14px;
+    color: #c4a7e7;
+
+}
+
+/* Fix for systray menus and tooltips */
+
+menu {
+    padding: 5px;
+    background-color: #232136;
+    border: 2px solid #56388A;
+    border-radius: 10px;
+}
+
+menuitem {
+    padding: 5px;
+}
+
+tooltip {
+    background-color: #232136;
+    color: #c4a7e7;
+    border-radius: 10px;
+    padding: 5px;
+    border: 2px solid #56388A;
+}
+
+/* --------------------------------------- Common Styles -------------------------------------- */
+
+/* Style for module */
+.module {
+    background: rgba(35, 33, 54, 0.9);
+    /*#232136;*/
+    border-radius: 10px;
+    border: 3px solid rgba(86, 56, 138, 1);
+    /*#56388A;*/
+    margin-right: 8px;
+    padding: 0 15px;
+}
+
+/* Style for module updates */
+.module-updates {
+    background: rgba(35, 33, 54, 0.9);
+    /*#232136;*/
+    border-radius: 10px;
+    border: 3px solid rgba(86, 56, 138, 1);
+    /*#56388A;*/
+    margin-right: 8px;
+    padding: 0 15px;
+}
+
+.module_ss {
+    background: #232136;
+    border-radius: 10px;
+    border: 2px solid #56388A;
+    margin-right: 8px;
+    padding: 0 15px;
+}
+
+/* Remove the `margin-right` for the last module */
+.last-widget {
+    margin-right: 0;
+}
+
+/* Make the bar transparent */
+.bar {
+    background: transparent;
+}
+
+.date {
+    color: #eb6f92;
+}
+
+.updates {
+    color: #f6c177;
+}
+
+.workspace_btn {
+    background: transparent;
+    padding: 0 8px 0px 14px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    outline: 0px;
+
+}
+
+.workspace_btn:hover {
+    box-shadow: inherit;
+    text-shadow: inherit;
+}
+
+// workspace button inactive
+.workspace_label {
+    color: #c4a7e7;
+    font-size: 16px;
+}
+
+// workspace button active
+.workspace_label_active {
+    color: #a4e7a4;
+    font-size: 16px;
+}
+
+.cpu {
+    color: #ebbcba;
+}
+
+.ram {
+    color: #31748f;
+}
+
+.time {
+    color: #c4a7e7;
+}
+
+.net_status {
+    color: #9ccfd8;
+}
+
+/* -------------------------------------- Desktop Widget -------------------------------------- */
+
+.desktop {
+    background-color: transparent;
+}
+
+.desktop-1 {
+    background-color: transparent;
+}
+
+.desktop-0 {
+    background-color: transparent;
+}
+
+.desktop_clock {
+    padding: 40px 35px;
+}
+
+.desktop_time {
+    font-size: 96px;
+}
+
+.desktop_time_h,
+.desktop_time_m {
+    color: #c4a7e7;
+}
+
+.desktop_time_colon {
+    color: #c4a7e7;
+}
+
+.desktop_time_p {
+    color: #c4a7e7;
+}
+
+.desktop_date_date {
+    margin-left: 10px;
+}
+
+.desktop_date {
+    font-size: 32px;
+    color: #c4a7e7;
+}
+
+/* -------------------------------------Powermenu Widget---------------------------------------*/
+.powermenu {
+    border-radius: 10px;
+    border: 2px solid #3f056b;
+}
+
+.powermenu_button {
+    background: transparent;
+    padding: 20px;
+}
+
+.powermenu_button:nth-child(1) {
+    border-radius: 10px 10px 0 0;
+}
+
+.powermenu_button:nth-child(2) {
+    border-radius: 0 0 10px 10px;
+}
+
+.powermenu_button:hover {
+    background: #2a283e;
+}
+
+.powermenu_label_restart {
+    color: #c4a7e7;
+    font-size: 32px;
+}
+
+.powermenu_label_poweroff {
+    color: #eb6f92;
+    font-size: 32px;
+}
+
+/* -------------------------------------- Dashboard Widget ------------------------------------ */
+
+.dashboard-root {
+    background-color: rgba(30, 30, 46, 0.6);
+    border: 3px solid rgba(168, 85, 247, 0.4);
+    border-radius: 30px;
+    padding: 30px;
+    margin: 10px;
+}
+
+.dash-time-section {
+    padding-right: 30px;
+    min-width: 120px;
+}
+
+.dash-time-h, .dash-time-m {
+    font-size: 64px;
+    color: #d8acff;
+}
+
+.dash-time-s {
+    font-size: 24px;
+    color: #a855f7;
+    margin-bottom: 10px;
+}
+
+.dash-time-day {
+    font-size: 24px;
+    color: #cdd6f4;
+}
+
+.dash-time-date {
+    font-size: 16px;
+    color: #6c7086;
+}
+
+.dash-divider {
+    background-color: rgba(168, 85, 247, 0.2);
+    margin: 0 10px;
+}
+
+.dash-modules-section {
+    padding-left: 20px;
+}
+
+/* Stats circles */
+.stat-circle-box {
+    margin: 0 10px;
+}
+
+.cpu-circle { color: #a855f7; }
+.ram-circle { color: #f5c2e7; }
+.bat-circle { color: #94e2d5; }
+
+.stat-label {
+    font-size: 10px;
+    color: #cdd6f4;
+}
+
+.stat-value {
+    font-size: 14px;
+    font-weight: bold;
+    color: #d8acff;
+}
+
+/* Calendar */
+.dash-calendar-container {
+    background-color: rgba(24, 24, 37, 0.4);
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.dash-calendar {
+    background-color: transparent;
+    color: #d8acff;
+    font-size: 12px;
+}
+
+.dash-calendar header {
+    color: #a855f7;
+    font-size: 14px;
+}
+
+.dash-calendar:selected {
+    background-color: #a855f7;
+    color: #1e1e2e;
+    border-radius: 5px;
+}
+
+/* Misc info */
+.dash-misc-box {
+    min-width: 150px;
+}
+
+.dash-weather-box {
+    background-color: rgba(168, 85, 247, 0.15);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.weather-icon {
+    font-size: 32px;
+    color: #f9e2af;
+}
+
+.weather-temp {
+    font-size: 24px;
+    color: #d8acff;
+}
+
+.dash-profile-box {
+    background-color: rgba(24, 24, 37, 0.6);
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.profile-icon {
+    font-size: 40px;
+    color: #a855f7;
+}
+
+
+/* ------------------------------------- Calendar Widget -------------------------------------- */
+
+.calendar-container {
+    background-color: rgba(30, 30, 46, 0.4);
+    border-radius: 20px;
+    border: 2px solid rgba(168, 85, 247, 0.3);
+    padding: 15px;
+}
+
+.calendar-widget {
+    background-color: transparent;
+    color: #d8acff;
+}
+
+.calendar-widget:selected {
+    color: #a855f7;
+    background-color: #d8acff;
+    border-radius: 5px;
+}
+
+.calendar-widget header {
+    color: #a855f7;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.calendar-widget button {
+    color: #d8acff;
+}
+
+.calendar-widget button:hover {
+    color: #f5c2e7;
+}
+
+/* Day names row */
+.calendar-widget .highlight {
+    color: #f5c2e7;
+}

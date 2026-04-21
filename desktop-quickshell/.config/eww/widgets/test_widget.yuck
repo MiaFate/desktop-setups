@@ -1,0 +1,6 @@
+
+(defpoll test_var2 :interval "1s" "/home/mia/.config/eww/scripts/get_active_workspace.sh")
+
+(defwidget test_widget []
+  (box :orientation "v"
+    (label :text test_var2 :class { test_var2 == 1 ? "workspace_label_active" : "workspace_label"})))

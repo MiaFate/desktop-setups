@@ -1,0 +1,10 @@
+(defpoll update_no :interval "60s" `bash /home/mia/.config/eww/scripts/pacman_updates.sh`)
+
+(defwidget updates []
+  (box :class "module-updates" :halign "start" :space-evenly "false" :orientation "h" :spacing "3"
+    (button :class "workspace_btn" :onclick "$HOME/.config/hypr/scripts/Distro_update.sh"
+      (label :text "󰮯  ${update_no}" :class "updates")
+      ;;(label :text update_no :class "updates")
+    )
+  )
+)

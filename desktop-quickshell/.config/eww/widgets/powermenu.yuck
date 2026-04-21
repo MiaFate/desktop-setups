@@ -1,0 +1,14 @@
+(defwidget powermenu []
+    (box :orientation "v" :space-evenly "true" :spacing "4" :class "powermenu"
+        (button :onclick "reboot" :class "powermenu_button" :halign "center" :valign "center"
+            (label :text "" :class "powermenu_label_restart"))
+        (button :onclick "poweroff" :class "powermenu_button" :halign "center" :valign "center"
+            (label :text "󰐥" :class "powermenu_label_poweroff"))
+        (button :onclick "hyprshot -m region" :class "powermenu_button" :halign "center" :valign "center"
+            (label :text "󰹉" :class "powermenu_label_restart"))
+        (button :onclick "hyprshot -m window" :class "powermenu_button" :halign "center" :valign "center"
+            (label :text "" :class "powermenu_label_restart"))
+        (button :onclick "hyprshot -m window -m active --clipboard-only" :class "powermenu_button" :halign "center" :valign "center"
+            (label :text "󰄄" :class "powermenu_label_restart"))
+    )
+)

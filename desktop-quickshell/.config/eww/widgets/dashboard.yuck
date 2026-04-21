@@ -1,0 +1,50 @@
+(defwidget stat_circle [value label class]
+  (box :orientation "v" :space-evenly false :spacing 5 :class "stat-circle-box"
+    (circular-progress :value value
+                       :class class
+                       :thickness 6
+                       :start-at 75
+      (label :text label :class "stat-label"))
+    (label :text "${round(value, 0)}%" :class "stat-value")
+  )
+)
+
+(defwidget dashboard []
+  (box :class "dashboard-root" :orientation "h" :space-evenly false
+    ;; Left: Time Section
+    (box :class "dash-time-section" :orientation "v" :space-evenly false :valign "center"
+      (label :class "dash-time-h" :text {formattime(EWW_TIME, "%H")})
+      (label :class "dash-time-m" :text {formattime(EWW_TIME, "%M")})
+      (label :class "dash-time-s" :text {formattime(EWW_TIME, "%S")})
+      (label :class "dash-time-day" :text {formattime(EWW_TIME, "%A")})
+      (label :class "dash-time-date" :text {formattime(EWW_TIME, "%d %b")})
+    )
+
+    ;; Divider
+    (box :class "dash-divider" :width 2)
+
+    ;; Right: Modules Section
+    (box :class "dash-modules-section" :orientation "v" :space-evenly false :hexpand true :spacing 20
+      ;; Top Row: Stats
+      (box :class "dash-stats-row" :orientation "h" :space-evenly true
+        (stat_circle :value cpu_raw :label "CPU" :class "cpu-circle")
+        (stat_circle :value ram_raw :label "RAM" :class "ram-circle")
+        (stat_circle :value bat_raw :label "BAT" :class "bat-circle")
+      )
+
+      ;; Bottom Row: Calendar and Misc
+      (box :class "dash-bottom-row" :orientation "h" :space-evenly false :spacing 20
+        (box :class "dash-calendar-container" :hexpand true
+          (calendar :class "dash-calendar"))
+        
+        (box :class "dash-misc-box" :orientation "v" :space-evenly true
+          (box :class "dash-weather-box" :orientation "h" :space-evenly false :spacing 10
+            (label :text "󰖐" :class "weather-icon")
+            (label :text "+26°C" :class "weather-temp"))
+          (box :class "dash-profile-box"
+            (label :text "󰊠" :class "profile-icon"))
+        )
+      )
+    )
+  )
+)

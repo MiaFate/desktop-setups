@@ -1,0 +1,22 @@
+
+;; global variable to check active workspace
+(defpoll test_var :interval "1s" "/home/mia/.config/eww/scripts/get_active_workspace.sh")
+
+
+(defwidget workspaces []
+  (eventbox
+    (box :class "module" :space-evenly "false" :orientation "h" :spacing "4"
+      (button :class "workspace_btn" :onclick "hyprctl dispatch workspace 1"
+        (label :text " " :class { test_var == 1 ? "workspace_label_active" : "workspace_label"}))
+      (button :class "workspace_btn" :onclick "hyprctl dispatch workspace 2"
+        (label :text " " :class { test_var == 2 ? "workspace_label_active" : "workspace_label"}))
+      (button :class "workspace_btn" :onclick "hyprctl dispatch workspace 3"
+        (label :text " " :class { test_var == 3 ? "workspace_label_active" : "workspace_label"}))
+      (button :class "workspace_btn" :onclick "hyprctl dispatch workspace 4"
+        (label :text " " :class { test_var == 4 ? "workspace_label_active" : "workspace_label"}))
+      (button :class "workspace_btn" :onclick "hyprctl dispatch workspace 5"
+        (label :text " " :class { test_var == 5 ? "workspace_label_active" : "workspace_label"}))
+      (button :class "workspace_btn" :onclick "hyprctl dispatch workspace 6"
+        (label :text "󰙯 " :class { test_var == 6 ? "workspace_label_active" : "workspace_label"}))
+      (button :class "workspace_btn" :onclick "hyprctl dispatch workspace 7"
+        (label :text " " :class { test_var == 7 ? "workspace_label_active" : "workspace_label"})))))

@@ -1,0 +1,8 @@
+(defwidget desktop_calendar []
+  (box :class "calendar-container" :orientation "v" :space-evenly false
+    (calendar :class "calendar-widget"
+              :show-details true
+              :show-heading true
+              :show-day-names true)
+  )
+)
