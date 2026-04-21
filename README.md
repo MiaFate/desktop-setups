@@ -19,7 +19,7 @@ Si se te rompió algo, borraste una carpeta sin querer, o acabas de instalar Arc
 Primero, bájate esta bóveda a tu carpeta de inicio (`~`):
 ```bash
 cd ~
-git clone git@github.com:MiaFate/dotfiles.git
+git clone git@github.com:MiaFate/desktop-setups.git dotfiles
 cd dotfiles
 ```
 
