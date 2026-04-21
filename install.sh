@@ -29,7 +29,15 @@ yay -S --needed --noconfirm \
     wallust \
     ttf-jetbrains-mono-nerd \
     noto-fonts-cjk \
-    xdg-desktop-portal-hyprland
+    xdg-desktop-portal-hyprland \
+    fcitx5 fcitx5-mozc fcitx5-im fcitx5-configtool \
+    pamixer \
+    bluez bluez-utils \
+    playerctl \
+    jq \
+    power-profiles-daemon \
+    networkmanager \
+    python-requests
 
 echo "📦 Instalando herramientas especiales (Quickshell y Wallpaper Engine)..."
 # Quickshell y linux-wallpaperengine están en AUR y pueden tardar un ratito en compilarse

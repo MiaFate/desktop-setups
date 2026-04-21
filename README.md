@@ -7,9 +7,9 @@ Este repositorio contiene toda la configuración de mi entorno de escritorio bas
 Antes de intentar restaurar esta configuración en una computadora nueva o limpia, asegúrate de tener instalados los siguientes paquetes básicos:
 
 ```bash
-sudo pacman -S git stow hyprland kitty rofi fastfetch neofetch btop
+sudo pacman -S git stow yay
 ```
-*(Nota: Quickshell, Cava, Wallust y linux-wallpaperengine deben ser instalados por separado o a través de AUR/paru/yay según corresponda).*
+*(Nota: El resto de dependencias como Hyprland, Quickshell, Fcitx5, Pamixer, Playerctl, etc., se instalarán automáticamente al correr el script `install.sh`).*
 
 ## 🚀 Cómo Restaurar Todo (Guía de Supervivencia)
 
