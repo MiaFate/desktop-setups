@@ -23,13 +23,21 @@ git clone git@github.com:MiaFate/desktop-setups.git dotfiles
 cd dotfiles
 ```
 
-### 2. Limpiar (Si es necesario)
+### 2. Instalar Dependencias
+Para que no te falte nada (incluyendo fuentes para japonés, iconos y herramientas de sistema), corre el script que te preparé:
+```bash
+chmod +x install.sh
+./install.sh
+```
+*(Este script instalará automáticamente todo lo necesario usando `yay`, incluyendo `noto-fonts-cjk` para que los Kanjis funcionen desde el primer momento).*
+
+### 3. Limpiar (Si es necesario)
 Si ya tienes una carpeta `~/.config/hypr` o `~/.config/quickshell` que viene por defecto, **bórrala o cámbiale el nombre**. Stow no va a crear enlaces si ya existe un archivo o carpeta real en ese lugar.
 ```bash
-rm -rf ~/.config/hypr ~/.config/quickshell ~/.config/kitty # (etc...)
+rm -rf ~/.config/hypr ~/.config/quickshell ~/.config/kitty ~/.config/nvim
 ```
 
-### 3. Ejecutar Stow (La Magia)
+### 4. Ejecutar Stow (La Magia)
 Desde adentro de la carpeta `~/dotfiles`, simplemente ejecuta:
 ```bash
 stow desktop-quickshell
