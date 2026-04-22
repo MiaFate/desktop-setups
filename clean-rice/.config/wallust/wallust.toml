@@ -46,8 +46,8 @@ rofi.target = '~/.config/rofi/wallust/colors-rofi.rasi'
 waybar.template = 'colors-waybar.css'
 waybar.target = '~/.config/waybar/wallust/colors-waybar.css'
 
-kitty.template = 'colors-kitty.conf'
-kitty.target = '~/.config/kitty/kitty-themes/01-Wallust.conf'
+# kitty.template = 'colors-kitty.conf'
+# kitty.target = '~/.config/kitty/kitty-themes/01-Wallust.conf'
 
 quickshell.template = 'qml_color.json'
 quickshell.target = '~/.config/quickshell/qml_color.json'
