@@ -30,11 +30,10 @@ Item {
         }
     }
 
-    Item {
+    Row {
         id: iconContainer
         anchors.centerIn: parent
-        implicitWidth: childrenRect.width
-        implicitHeight: childrenRect.height
+        spacing: 0
     }
 
     MouseArea {

@@ -2,11 +2,9 @@
 
 Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para llevar este "Clean Start" al siguiente nivel.
 
-## 🔒 Seguridad e Inactividad
-- [ ] **hyprlock**: Bloqueador de pantalla nativo.
-    - *Cómo agregar*: Crear `hyprlock.conf` y configurar imágenes/relojes.
-- [ ] **hypridle**: Gestión de inactividad.
-    - *Cómo agregar*: Configurar tiempos de espera para bloquear pantalla y apagar monitores.
+## 🔐 Seguridad y Bloqueo
+- [ ] **Hyprlock**: Configurar pantalla de bloqueo estética con desenfoque y reloj.
+- [ ] **Hypridle**: Configurar auto-bloqueo y suspensión tras X minutos de inactividad.
 
 ## 🎨 Estética y Efectos
 - [ ] **hyprshade**: Filtros de pantalla (Luz nocturna, Grayscale, Vibrance).

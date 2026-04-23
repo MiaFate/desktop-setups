@@ -18,8 +18,17 @@ Singleton {
     property var monitors: []
 
     function updateWindowList() {
-        getClients.running = true
-        getMonitors.running = true
+        updateTimer.restart()
+    }
+
+    Timer {
+        id: updateTimer
+        interval: 100
+        repeat: false
+        onTriggered: {
+            getClients.running = true
+            getMonitors.running = true
+        }
     }
 
     Component.onCompleted: {
@@ -30,12 +39,13 @@ Singleton {
         target: Hyprland
 
         function onRawEvent(event) {
-            // Filter out redundant old v1 events for the same thing
+            // Filter out redundant old v1 events
             if(event.name in [
                 "activewindow", "focusedmon", "monitoradded", 
                 "createworkspace", "destroyworkspace", "moveworkspace", 
                 "activespecial", "movewindow", "windowtitle"
             ]) return ;
+            
             updateWindowList()
         }
     }

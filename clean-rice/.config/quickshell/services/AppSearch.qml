@@ -75,42 +75,72 @@ Singleton {
             && !iconName.includes("image-missing");
     }
 
+    property var iconCache: ({})
+
     function guessIcon(str) {
         if (!str || str.length == 0) return "image-missing";
+        
+        // Check cache first
+        if (root.iconCache[str]) return root.iconCache[str];
+
+        let result = "image-missing";
 
         // Normal substitutions
-        if (substitutions[str])
-            return substitutions[str];
+        if (substitutions[str]) {
+            result = substitutions[str];
+        } else {
+            // Regex substitutions
+            let foundRegex = false;
+            for (let i = 0; i < regexSubstitutions.length; i++) {
+                const substitution = regexSubstitutions[i];
+                const replacedName = str.replace(
+                    substitution.regex,
+                    substitution.replace,
+                );
+                if (replacedName != str) {
+                    result = replacedName;
+                    foundRegex = true;
+                    break;
+                }
+            }
 
-        // Regex substitutions
-        for (let i = 0; i < regexSubstitutions.length; i++) {
-            const substitution = regexSubstitutions[i];
-            const replacedName = str.replace(
-                substitution.regex,
-                substitution.replace,
-            );
-            if (replacedName != str) return replacedName;
+            if (!foundRegex) {
+                // If it gets detected normally, no need to guess
+                if (iconExists(str)) {
+                    result = str;
+                } else {
+                    let guessStr = str;
+                    // Guess: Take only app name of reverse domain name notation
+                    guessStr = str.split('.').slice(-1)[0].toLowerCase();
+                    if (iconExists(guessStr)) {
+                        result = guessStr;
+                    } else {
+                        // Guess: normalize to kebab case
+                        guessStr = str.toLowerCase().replace(/\s+/g, "-");
+                        if (iconExists(guessStr)) {
+                            result = guessStr;
+                        } else {
+                            // Guess: First fuzzy desktop entry match
+                            const searchResults = root.fuzzyQuery(str);
+                            if (searchResults.length > 0) {
+                                const firstEntry = searchResults[0];
+                                guessStr = firstEntry.icon;
+                                if (iconExists(guessStr)) {
+                                    result = guessStr;
+                                } else {
+                                    result = str;
+                                }
+                            } else {
+                                result = str;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        // If it gets detected normally, no need to guess
-        if (iconExists(str)) return str;
-
-        let guessStr = str;
-        // Guess: Take only app name of reverse domain name notation
-        guessStr = str.split('.').slice(-1)[0].toLowerCase();
-        if (iconExists(guessStr)) return guessStr;
-        // Guess: normalize to kebab case
-        guessStr = str.toLowerCase().replace(/\s+/g, "-");
-        if (iconExists(guessStr)) return guessStr;
-        // Guess: First fuzze desktop entry match
-        const searchResults = root.fuzzyQuery(str);
-        if (searchResults.length > 0) {
-            const firstEntry = searchResults[0];
-            guessStr = firstEntry.icon
-            if (iconExists(guessStr)) return guessStr;
-        }
-
-        // Give up
-        return str;
+        // Store in cache and return
+        root.iconCache[str] = result;
+        return result;
     }
 }

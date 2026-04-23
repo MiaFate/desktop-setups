@@ -32,18 +32,17 @@ DropdownWidget {
     }
 
     // Icon with spacing
-    Item {
-        width: powerIcon.width + 16
-        height: parent.height
-
-        Text {
-            id: powerIcon
-            anchors.centerIn: parent
-            text: "󰐥"
-            color: dropdownOpen ? "#ff5555" : Purpletheme.colFg
-            font.pixelSize: Purpletheme.fontSize
-            font.family: Purpletheme.fontFamily
-        }
+    // Icon
+    Text {
+        id: powerIcon
+        text: "󰐥"
+        color: dropdownOpen ? "#ff5555" : Purpletheme.textPrimary
+        font.pixelSize: 18
+        font.family: "JetBrainsMono Nerd Font"
+        width: 40
+        height: 40
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
     }
 
     popupContent: Component {
