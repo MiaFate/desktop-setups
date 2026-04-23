@@ -12,7 +12,7 @@ RowLayout {
     property bool showFlag: false
     
     Timer {
-        interval: 1000
+        interval: 500 // Balance ideal: reactivo y ultra-bajo consumo
         running: true
         repeat: true
         onTriggered: updateLang()
@@ -23,19 +23,21 @@ RowLayout {
     }
     
     function toggleLang() {
+        // Rotamos los idiomas usando fcitx5-remote
         if (currentLang === "EN") {
             switchProc.command = ["fcitx5-remote", "-s", "mozc"]
         } else {
             switchProc.command = ["fcitx5-remote", "-s", "keyboard-us"]
         }
         switchProc.running = true
-        showFlag = true
-        flagTimer.restart()
+        
+        // Forzamos actualización inmediata visual
+        updateLang()
     }
     
     Timer {
         id: flagTimer
-        interval: 3000
+        interval: 2000 // Bajamos a 2s para que sea menos intrusivo
         onTriggered: showFlag = false
     }
     
@@ -45,11 +47,15 @@ RowLayout {
         stdout: SplitParser {
             onRead: data => {
                 var oldLang = root.currentLang
-                if (data.includes("mozc")) {
+                var cleanData = data.trim()
+                
+                if (cleanData.includes("mozc")) {
                     root.currentLang = "JP"
                 } else {
                     root.currentLang = "EN"
                 }
+                
+                // Si cambió el idioma, mostramos el feedback visual
                 if (oldLang !== root.currentLang) {
                     showFlag = true
                     flagTimer.restart()
