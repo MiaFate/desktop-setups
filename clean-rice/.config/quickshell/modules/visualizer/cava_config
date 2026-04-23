@@ -1,6 +1,6 @@
 [general]
 bars = 50
-framerate = 60
+framerate = 24
 sensitivity = 100
 autosens = 1
 overshoot = 0

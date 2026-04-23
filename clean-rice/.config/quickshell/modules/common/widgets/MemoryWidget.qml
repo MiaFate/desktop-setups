@@ -31,7 +31,7 @@ Text {
     }
 
     Timer {
-        interval: 2000
+        interval: 3000
         running: true
         repeat: true
         onTriggered: memProc.running = true

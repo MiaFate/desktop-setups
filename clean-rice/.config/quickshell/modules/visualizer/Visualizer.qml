@@ -3,6 +3,8 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import "../common/themes"
+import QtQuick.Shapes
+import "root:/services/"
 
 PanelWindow {
     id: visualizerWindow
@@ -29,124 +31,132 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Bottom
     WlrLayershell.namespace: "quickshell:visualizer"
     WlrLayershell.exclusiveZone: 0
-
     
-    // No queremos que bloquee el mouse (hacer click "atraviesa" el visualizador)
+    // No queremos que bloquee el mouse
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
     
-    property var audioData: []
+    // El proceso de Cava ahora se gestiona en CavaService.qml
+    readonly property var audioData: CavaService.audioData
     
-    // Proceso de Cava
-    Process {
-        id: cavaProc
-        command: ["cava", "-p", Quickshell.shellDir + "/modules/visualizer/cava_config"]
-        running: VisualizerSettings.enabled
+    // --- IMPLEMENTACIÓN OPTIMIZADA ---
+    
+    // Estilo 1: BARS (Rectángulos nativos - Ultra eficiente)
+    Row {
+        id: barsContainer
+        anchors.fill: parent
+        anchors.margins: 2
+        spacing: 1
+        visible: VisualizerSettings.enabled && VisualizerSettings.style === "bars"
         
-        stdout: SplitParser {
-            onRead: data => {
-                var parts = data.trim().split(';')
-                var newData = []
-                for (var i = 0; i < parts.length; i++) {
-                    var val = parseInt(parts[i])
-                    if (!isNaN(val)) newData.push(val)
+        Repeater {
+            model: visualizerWindow.audioData.length
+            Rectangle {
+                width: (barsContainer.width / visualizerWindow.audioData.length) - barsContainer.spacing
+                height: (visualizerWindow.audioData[index] / 100) * barsContainer.height
+                anchors.bottom: parent.bottom
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: Purpletheme.primary }
+                    GradientStop { position: 1.0; color: "transparent" }
                 }
-                if (newData.length > 0) {
-                    visualizerWindow.audioData = newData
-                    canvas.requestPaint()
+                Behavior on height { NumberAnimation { duration: 80; easing.type: Easing.OutQuad } }
+            }
+        }
+    }
+
+    // Estilo 2: WAVES (Shape - Mucho más eficiente que Canvas)
+    Shape {
+        id: wavesVisualizer
+        anchors.fill: parent
+        visible: VisualizerSettings.enabled && VisualizerSettings.style === "waves"
+        
+        ShapePath {
+            id: wavePath
+            strokeWidth: 3
+            strokeColor: Purpletheme.primary
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
+            
+            startX: 0
+            startY: visualizerWindow.height
+            
+            PathPolyline {
+                path: {
+                    var data = visualizerWindow.audioData
+                    var w = visualizerWindow.width
+                    var h = visualizerWindow.height
+                    var barWidth = w / Math.max(1, data.length)
+                    var points = []
+                    for (var i = 0; i < data.length; i++) {
+                        points.push(Qt.point(i * barWidth, h - (data[i] / 100) * h))
+                    }
+                    points.push(Qt.point(w, h))
+                    return points
+                }
+            }
+        }
+        
+        // Efecto de brillo/relleno opcional
+        ShapePath {
+            fillGradient: LinearGradient {
+                y1: 0; y2: wavesVisualizer.height
+                GradientStop { position: 0.0; color: Purpletheme.primary }
+                GradientStop { position: 1.0; color: "transparent" }
+            }
+            strokeColor: "transparent"
+            startX: 0
+            startY: visualizerWindow.height
+            PathPolyline {
+                path: {
+                    var data = visualizerWindow.audioData
+                    var w = visualizerWindow.width
+                    var h = visualizerWindow.height
+                    var barWidth = w / Math.max(1, data.length)
+                    var points = []
+                    for (var i = 0; i < data.length; i++) {
+                        points.push(Qt.point(i * barWidth, h - (data[i] / 100) * h))
+                    }
+                    points.push(Qt.point(w, h))
+                    return points
                 }
             }
         }
     }
-    
-    // Temporizador para limpiar datos si no hay música
-    Timer {
-        interval: 100
-        running: VisualizerSettings.enabled
-        repeat: true
-        onTriggered: {
-            // Si no recibimos datos nuevos, los bars bajan a 0
-            canvas.requestPaint()
-        }
-    }
 
+    // Estilo 3: CYBER (Canvas - Sigue optimizado con un Timer más lento)
     Canvas {
-        id: canvas
+        id: complexVisualizer
         anchors.fill: parent
-        opacity: VisualizerSettings.enabled ? 0.6 : 0
-        Behavior on opacity { NumberAnimation { duration: 500 } }
-        
+        visible: VisualizerSettings.enabled && VisualizerSettings.style === "cyber"
         onPaint: {
             var ctx = getContext("2d")
             ctx.reset()
-            
-            if (visualizerWindow.audioData.length === 0) return
+            var data = visualizerWindow.audioData
+            if (data.length === 0) return
             
             var w = width
             var h = height
-            var bars = visualizerWindow.audioData
-            var barWidth = w / bars.length
+            var barWidth = w / data.length
             
-            if (VisualizerSettings.style === "bars") {
-                var gradient = ctx.createLinearGradient(0, 0, 0, h)
-                gradient.addColorStop(0, Purpletheme.primary)
-                gradient.addColorStop(0.2, Purpletheme.primary)
-                gradient.addColorStop(1, "transparent")
-                ctx.fillStyle = gradient
-                
-                for (var i = 0; i < bars.length; i++) {
-                    var barHeight = (bars[i] / 100) * h
-                    ctx.fillRect(i * barWidth + 1, h - barHeight, barWidth - 2, barHeight)
+            var blockH = 6
+            var space = 2
+            ctx.fillStyle = Purpletheme.primary
+            for (var i = 0; i < data.length; i++) {
+                var barH = (data[i] / 100) * h
+                var blocks = Math.floor(barH / (blockH + space))
+                for (var j = 0; j < blocks; j++) {
+                    var y = h - (j * (blockH + space)) - blockH
+                    ctx.globalAlpha = (j / blocks) * 0.8 + 0.2
+                    ctx.fillRect(i * barWidth + 1, y, barWidth - 2, blockH)
                 }
-            } else if (VisualizerSettings.style === "waves") {
-                // Style: Waves
-                ctx.beginPath()
-                ctx.lineWidth = 3
-                ctx.strokeStyle = Purpletheme.primary
-                
-                ctx.moveTo(0, h)
-                for (var i = 0; i < bars.length; i++) {
-                    var barHeight = (bars[i] / 100) * h
-                    ctx.lineTo(i * barWidth, h - barHeight)
-                }
-                ctx.lineTo(w, h)
-                
-                // Gradient fill
-                var gradient = ctx.createLinearGradient(0, 0, 0, h)
-                gradient.addColorStop(0, Purpletheme.primary)
-                gradient.addColorStop(0.2, Purpletheme.primary)
-                gradient.addColorStop(1, "transparent")
-                ctx.fillStyle = gradient
-                
-                ctx.fill()
-                ctx.stroke()
-            } else if (VisualizerSettings.style === "cyber") {
-                // Estilo Bloques Digitales
-                var blockHeight = 4
-                var spacing = 2
-                
-                for (var i = 0; i < bars.length; i++) {
-                    var barHeight = (bars[i] / 100) * h
-                    var numBlocks = Math.floor(barHeight / (blockHeight + spacing))
-                    
-                    for (var j = 0; j < numBlocks; j++) {
-                        var y = h - (j * (blockHeight + spacing)) - blockHeight
-                        // Desvanecimiento hacia abajo (más oscuro/transparente en la base)
-                        var opacity = Math.min(1.0, (j / (numBlocks * 0.8)))
-                        
-                        ctx.fillStyle = Purpletheme.primary
-                        ctx.globalAlpha = opacity
-                        ctx.fillRect(i * barWidth + 1, y, barWidth - 2, blockHeight)
-                    }
-                    
-                    // Pequeño pico flotante
-                    if (numBlocks > 0) {
-                        ctx.fillStyle = "white"
-                        ctx.globalAlpha = 0.5
-                        ctx.fillRect(i * barWidth + 1, h - (numBlocks + 2) * (blockHeight + spacing), barWidth - 2, 2)
-                    }
-                }
-                ctx.globalAlpha = 1.0
             }
+            ctx.globalAlpha = 1.0
+        }
+        
+        Timer {
+            interval: 41 // ~24fps
+            running: complexVisualizer.visible
+            repeat: true
+            onTriggered: complexVisualizer.requestPaint()
         }
     }
 }
