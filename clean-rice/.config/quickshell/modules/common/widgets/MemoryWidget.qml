@@ -9,7 +9,8 @@ Text {
     property int memUsage: 0
 
     text: memUsage + "% 󰾆"
-    color: Purpletheme.colMem
+    property color customColor: Purpletheme.textPrimary
+    color: customColor
     font.pixelSize: Purpletheme.fontSize
     font.family: Purpletheme.fontFamily
     font.bold: true

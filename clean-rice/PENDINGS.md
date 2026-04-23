@@ -7,17 +7,13 @@ Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para ll
 - [x] **Hypridle**: Configurar auto-bloqueo y suspensión tras X minutos de inactividad.
 
 ## 🎨 Estética y Efectos
-- [ ] **hyprshade**: Filtros de pantalla (Luz nocturna, Grayscale, Vibrance).
-    - *Cómo agregar*: Instalar y añadir binds para activar/desactivar filtros.
-- [ ] **hyprcursor**: Mejora de cursores en Wayland.
-    - *Estado*: Ya configurado en `envs.conf`.
+- [x] **hyprshade**: Filtros de pantalla (Luz nocturna 3400K, Grayscale, Vibrance). [Completado]
+    - *Integración*: Botones añadidos al Control Center de Quickshell.
+- [x] **hyprcursor**: Mejora de cursores en Wayland con Bibata-Modern-Ice. [Completado]
 
 ## 🛠️ Utilidades
-- [ ] **hyprpicker**: Selector de colores.
-    - *Estado*: Configurado con bind `SUPER + P`.
-    - *Mejora*: Integrar botón en la barra de Quickshell.
-- [ ] **hyprshot**: Screenshots más nativos.
-    - *Cómo agregar*: Reemplazar o complementar el script de Jakoolit.
+- [x] **hyprpicker**: Selector de colores integrado en el Control Center. [Completado]
+- [x] **hyprshot**: Capturas de pantalla integradas en el Control Center. [Completado]
 - [ ] **hyprpolkitagent**: Agente de autenticación visual.
     - *Cómo agregar*: Añadir al `autostart.conf`.
 

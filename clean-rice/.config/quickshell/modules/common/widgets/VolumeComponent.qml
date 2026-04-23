@@ -11,6 +11,7 @@ Item {
     property int volumeLevel: 0
     property bool volumeMuted: false
     property string audioSink: "speaker"  // speaker, headphone, hdmi, bluetooth
+    property color customColor: Purpletheme.textPrimary
 
     property string volumeIcon: {
         if (volumeMuted) return "󰖁"
@@ -34,7 +35,7 @@ Item {
             color: volumeWidget.volumeMuted ? Purpletheme.textMuted :
                    volumeWidget.audioSink === "headphone" ? "#f1fa8c" :
                    volumeWidget.audioSink === "bluetooth" ? Purpletheme.active :
-                   Purpletheme.textPrimary
+                   volumeWidget.customColor
             font.pixelSize: 14
             font.family: "Font Awesome 6 Free"
             font.bold: true

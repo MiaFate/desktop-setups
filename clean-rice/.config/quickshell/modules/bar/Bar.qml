@@ -24,6 +24,10 @@ Variants {
         property var modelData
         screen: modelData
 
+    // Paleta de colores dinámica por monitor
+    property color barTextColor: isMainBar ? Purpletheme.textPrimary : "#94e2d5" // Púrpura vs Cian/Teal
+    property color barIconColor: isMainBar ? Purpletheme.textPrimary : "#94e2d5"
+
     signal closeAllPopups()
 
     // Identificación de Monitores
@@ -95,7 +99,7 @@ Variants {
             id: menuDropdown
             barWindow: bar
             popupWidth: 350
-            popupHeight: 450
+            popupHeight: 650
             stemAlignment: "left"
             Layout.alignment: Qt.AlignVCenter
             MenuWidget {}
@@ -229,8 +233,14 @@ Variants {
 
             SystrayWidget { visible: isSecondaryBar }
 
-            CpuWidget { visible: isSecondaryBar }
-            MemoryWidget { visible: isSecondaryBar }
+            CpuWidget { 
+                visible: isSecondaryBar 
+                customColor: bar.barTextColor
+            }
+            MemoryWidget { 
+                visible: isSecondaryBar 
+                customColor: bar.barTextColor
+            }
 
             // Separator visual
             Text {
@@ -242,39 +252,42 @@ Variants {
 
             LanguageWidget {
                 Layout.alignment: Qt.AlignVCenter
+                customColor: bar.barTextColor
             }
 
             WifiWidget {
                 barWindow: bar
+                customColor: bar.barTextColor
             }
 
             BluetoothWidget {
                 barWindow: bar
+                customColor: bar.barTextColor
             }
             
             PowerProfileWidget {
                 barWindow: bar
             }
 
-            VisualizerWidget {
-                barWindow: bar
-            }
-
             VolumeComponent {
                 Layout.alignment: Qt.AlignVCenter
+                customColor: bar.barTextColor
             }
 
             DropdownWidget {
                 barWindow: bar
                 popupWidth: 500
-                popupHeight: 350
+                popupHeight: 380
                 stemAlignment: "right"
-                ClockComponent {}
+                ClockComponent {
+                    customColor: bar.barTextColor
+                }
                 popupContent: DashboardPopup {}
             }
 
             PowerWidget {
                 barWindow: bar
+                customColor: bar.barTextColor
             }
         }
     }

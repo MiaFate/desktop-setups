@@ -22,6 +22,7 @@ DropdownWidget {
     property real uploadSpeed: 0
     property real lastRxBytes: 0
     property real lastTxBytes: 0
+    property color customColor: Purpletheme.textPrimary // Color por defecto
 
     function formatSpeed(bytesPerSec) {
         if (bytesPerSec < 1024) return bytesPerSec.toFixed(0) + " B/s"
@@ -145,7 +146,7 @@ DropdownWidget {
                   wifiSignal >= 60 ? "󰤥" :
                   wifiSignal >= 40 ? "󰤢" :
                   wifiSignal >= 20 ? "󰤟" : "󰤯"
-            color: wifiConnected ? Purpletheme.colNetwork : Purpletheme.colMuted
+            color: wifiConnected ? wifiWidget.customColor : Purpletheme.colMuted
             font.pixelSize: Purpletheme.fontSize + 4
             font.family: Purpletheme.fontFamily
             font.bold: true
@@ -155,7 +156,7 @@ DropdownWidget {
             anchors.verticalCenter: parent.verticalCenter
             visible: wifiConnected
             text: isEthernet ? " Ethernet" : " Wi-Fi"
-            color: Purpletheme.colNetwork
+            color: wifiWidget.customColor
             font.pixelSize: Purpletheme.fontSize - 1
             font.family: Purpletheme.fontFamily
         }

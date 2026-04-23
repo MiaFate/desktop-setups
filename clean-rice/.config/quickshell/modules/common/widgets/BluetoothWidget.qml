@@ -14,6 +14,7 @@ DropdownWidget {
     property bool btConnected: false
     property string btConnectedDevice: ""
     property var btDevices: []
+    property color customColor: Purpletheme.textPrimary
 
     onOpened: btDevicesProc.running = true
 
@@ -135,7 +136,7 @@ DropdownWidget {
         text: !btPowered ? "󰂲" :
               btConnected ? "󰂱" : "󰂯"
         color: !btPowered ? Purpletheme.textMuted :
-               btConnected ? "#50fa7b" : Purpletheme.textPrimary
+               btConnected ? "#50fa7b" : btWidget.customColor
         font.pixelSize: 14
         font.family: "Font Awesome 6 Free"
         font.bold: true

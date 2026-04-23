@@ -11,7 +11,8 @@ Text {
     property var lastCpuTotal: 0
 
     text: cpuUsage + "% 󰍛"
-    color: Purpletheme.colCpu
+    property color customColor: Purpletheme.textPrimary
+    color: customColor
     font.pixelSize: Purpletheme.fontSize
     font.family: Purpletheme.fontFamily
     font.bold: true

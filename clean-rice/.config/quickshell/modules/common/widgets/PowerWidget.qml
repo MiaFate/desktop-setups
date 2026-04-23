@@ -9,6 +9,7 @@ DropdownWidget {
     popupWidth: 140
     popupHeight: 165
     stemAlignment: "right"
+    property color customColor: Purpletheme.textPrimary
 
     // Power actions
     Process {
@@ -36,7 +37,7 @@ DropdownWidget {
     Text {
         id: powerIcon
         text: "󰐥"
-        color: dropdownOpen ? "#ff5555" : Purpletheme.textPrimary
+        color: dropdownOpen ? "#ff5555" : powerWidget.customColor
         font.pixelSize: 18
         font.family: "JetBrainsMono Nerd Font"
         width: 40

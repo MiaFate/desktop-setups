@@ -4,17 +4,18 @@ import "../themes"
 
 RowLayout {
     spacing: 6
+    property color customColor: Purpletheme.textPrimary
 
     Text {
         text: ""
         font.family: "Font Awesome 6 Free"
         font.pixelSize: 14
-        color: Purpletheme.textPrimary
+        color: customColor
     }
 
     Text {
         id: clock
-        color: Purpletheme.textPrimary
+        color: customColor
         font.pixelSize: 18
         font.weight: Font.Bold
         text: Qt.formatDateTime(new Date(), "hh:mm:AP")

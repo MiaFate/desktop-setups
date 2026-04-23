@@ -71,7 +71,7 @@ Item {
                 return iconCenter - popupWidth/2
             }
         }
-        anchor.rect.y: 32
+        anchor.rect.y: barWindow.height // Justo al borde de la barra
         implicitWidth: popupWidth
         implicitHeight: popupHeight
         color: "transparent"

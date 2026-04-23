@@ -10,6 +10,7 @@ RowLayout {
     
     property string currentLang: "EN"
     property bool showFlag: false
+    property color customColor: Purpletheme.textPrimary
     
     Timer {
         interval: 500 // Balance ideal: reactivo y ultra-bajo consumo
@@ -99,7 +100,7 @@ RowLayout {
             font.family: "JetBrainsMono Nerd Font"
             font.pixelSize: 14
             font.bold: true
-            color: showFlag ? "white" : Purpletheme.textPrimary
+            color: showFlag ? "white" : root.customColor
         }
         
         MouseArea {
