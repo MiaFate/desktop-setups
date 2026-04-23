@@ -26,3 +26,6 @@ Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para ll
 ## 📊 Barra y Sistema
 - [ ] **Quickshell (Avanzado)**: Seguir personalizando la barra actual.
     - *Tareas*: Dashboard, control de volumen visual, selector de perfiles de energía.
+- [ ] **Optimización de Visualizador**:
+    - *Problema*: Consumo de CPU muy alto (~20%).
+    - *Solución*: Rediseñar el sistema de dibujo (Canvas) para evitar crear objetos en cada frame o buscar alternativas más ligeras que Cava + QML.

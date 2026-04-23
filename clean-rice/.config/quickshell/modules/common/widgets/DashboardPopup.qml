@@ -234,7 +234,6 @@ Rectangle {
         repeat: true
         onTriggered: {
             root.currentTime = new Date()
-            root.requestPaint()
         }
     }
 }

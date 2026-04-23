@@ -33,8 +33,8 @@ Item {
     Item {
         id: iconContainer
         anchors.centerIn: parent
-        width: childrenRect.width
-        height: childrenRect.height
+        implicitWidth: childrenRect.width
+        implicitHeight: childrenRect.height
     }
 
     MouseArea {
