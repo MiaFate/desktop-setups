@@ -3,8 +3,8 @@
 Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para llevar este "Clean Start" al siguiente nivel.
 
 ## 🔐 Seguridad y Bloqueo
-- [ ] **Hyprlock**: Configurar pantalla de bloqueo estética con desenfoque y reloj.
-- [ ] **Hypridle**: Configurar auto-bloqueo y suspensión tras X minutos de inactividad.
+- [x] **Hyprlock**: Configurar pantalla de bloqueo estética con desenfoque y reloj.
+- [x] **Hypridle**: Configurar auto-bloqueo y suspensión tras X minutos de inactividad.
 
 ## 🎨 Estética y Efectos
 - [ ] **hyprshade**: Filtros de pantalla (Luz nocturna, Grayscale, Vibrance).
@@ -31,9 +31,9 @@ Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para ll
 ## 🚀 Optimizaciones de Aplicaciones y Widgets
 - [ ] **Alternativas a Apps Pesadas**:
     - *Discord*: Buscar clientes más ligeros (Vesktop con optimizaciones, Discord-Screen-Share o web wrapper).
-    - *Spotify*: Migrar de Snap a AUR/Flatpak o probar clientes CLI/Ligeros (ncspot, spotify-player).
+    - *Spotify*: Migrado a `spotify-launcher` con soporte Wayland Nativo (truco `env -u DISPLAY`). [Completado]
 - [ ] **Migración de Widgets (Eww -> Quickshell)**:
-    - *Reloj de Escritorio*: Reemplazar el widget de reloj de Eww por una versión nativa en Quickshell para eliminar la dependencia de Eww.
+    - [x] **Reloj de Escritorio**: Reemplazar el widget de reloj de Eww por una versión nativa en Quickshell para eliminar la dependencia de Eww. [Completado]
     - *Fuentes*: Buscar una fuente más estética/stylized para el nuevo Desktop Clock.
-- [ ] **Optimización de Fondo de Pantalla**:
-    - *awww*: Investigar e integrar `awww` como alternativa ligera para fondos animados/interactivos.
+- [x] **Optimización de Fondo de Pantalla**:
+    - *awww*: Migrado de Wallpaper Engine a `awww` para reducir uso de VRAM (~1.3GB ahorrados) y CPU. [Completado]
