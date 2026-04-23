@@ -14,8 +14,10 @@ if [[ "$1" == "status" ]]; then
 elif [[ "$1" == "toggle" ]]; then
     if pgrep -x "$PROCESS" >/dev/null; then
         pkill "$PROCESS"
+        notify-send -e -u low -t 2000 -i "caffeine" "Inhibidor de Sueño" "ACTIVADO - La PC no se bloqueará"
     else
-        "$PROCESS"
+        hypridle &
+        notify-send -e -u low -t 2000 -i "sleep" "Inhibidor de Sueño" "DESACTIVADO - Bloqueo automático activo"
     fi
 else
     echo "Usage: $0 {status|toggle}"

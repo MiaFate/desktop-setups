@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Wayland   // 👈 MUY IMPORTANTE
+import Quickshell.Wayland
 import Quickshell.Io
 import "../common/themes"
 import "../common/widgets"
@@ -13,10 +13,6 @@ import Quickshell.Services.SystemTray
 
 Variants {
     id: barVariants
-
-    // 💡 TIPO DE MONITOR:
-    // Para ver en TODOS los monitores usa: Quickshell.screens
-    // Para ver SOLO en el principal usa: [Quickshell.screens[0]]
     model: Quickshell.screens
 
     PanelWindow {
@@ -24,282 +20,192 @@ Variants {
         property var modelData
         screen: modelData
 
-    // Paleta de colores dinámica por monitor
-    property color barTextColor: isMainBar ? Purpletheme.textPrimary : "#94e2d5" // Púrpura vs Cian/Teal
-    property color barIconColor: isMainBar ? Purpletheme.textPrimary : "#94e2d5"
+        property bool isMainBar: bar.modelData.name === "DP-1"
+        property color barTextColor: isMainBar ? Purpletheme.textPrimary : "#94e2d5"
+        
+        signal closeAllPopups()
+        
+        color: "transparent"
+        visible: true
+        
+        anchors { top: true; left: true; right: true }
+        margins { top: 4 }
+        implicitHeight: isMainBar ? 56 : 41
 
-    signal closeAllPopups()
+        WlrLayershell.layer: WlrLayer.Top
+        WlrLayershell.namespace: "quickshell:bar"
 
-    // Identificación de Monitores
-    property bool isMainBar: bar.modelData.name === "DP-1"
-    property bool isSecondaryBar: !isMainBar
-
-    // Listen to Hyprland events to close popups when focus changes
-    Connections {
-        target: Hyprland
-        function onRawEvent(event) {
-            // Close popups when active window changes or layer closes
-            if (event.name === "activewindow" || event.name === "activewindowv2") {
-                bar.closeAllPopups()
-            }
-        }
-    }
-
-     color: isMainBar ? "transparent" : '#c4636266'
-    //color: '#c42b1c5f'
-    // Barra siempre visible
-    visible: true
-
-    // Posición tipo top bar
-    anchors {
-        top: true
-        left: true
-        right: true
-    }
-    
-    margins {
-        top: 4
-    }
-
-    implicitHeight: isMainBar ? 50 : 35
-
-    WlrLayershell.layer: WlrLayer.Top
-    WlrLayershell.namespace: "quickshell:bar"
-
-    Rectangle {
-        anchors.fill: parent
-        anchors {
-            left: parent.left
-            right: parent.right
-            verticalCenter: parent.verticalCenter
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: 6
+            radius: 6
+            color: isMainBar ? "#1e1e2eff" : '#1e13e2ff'
+            border.color: isMainBar ? Purpletheme.borderStrong : '#5c13e2bf'
+            border.width: 2
         }
 
-        anchors.leftMargin: 6
-        anchors.rightMargin: 6
-        radius: 6
-        color: isMainBar ? "#1e1e2ecc" : '#1e13e2c0'
+        // --- CONTENEDOR PRINCIPAL ---
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 18
+            anchors.rightMargin: 12
+            spacing: 0
 
-        border.color: isMainBar ? Purpletheme.borderStrong : '#5c13e2bf'
-        border.width: 2
-    }
-
-    RowLayout {
-        anchors.fill: parent
-        anchors {
-            left: parent.left
-            right: parent.right
-            verticalCenter: parent.verticalCenter
-        }
-        anchors.leftMargin: 14
-        anchors.rightMargin: 8
-        spacing: 8
-
-        //  Menu
-        DropdownWidget {
-            id: menuDropdown
-            barWindow: bar
-            popupWidth: 350
-            popupHeight: 650
-            stemAlignment: "left"
-            Layout.alignment: Qt.AlignVCenter
-            MenuWidget {}
-
-            popupContent: MenuPopup {}
-
-            GlobalShortcut {
-                name: "menuToggle"
-                onPressed: {
-                    // Usamos el nombre del monitor para mayor precisión
-                    if (Hyprland.focusedMonitor.name === bar.modelData.name) {
-                        menuDropdown.dropdownOpen = !menuDropdown.dropdownOpen
-                    }
+            // 1. BLOQUE IZQUIERDA (Agrupado y Dinámico)
+            RowLayout {
+                spacing: 12
+                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                Layout.fillHeight: true
+                
+                DropdownWidget {
+                    id: menuDropdown
+                    barWindow: bar
+                    popupWidth: 350; popupHeight: 650
+                    stemAlignment: "left"
+                    MenuWidget {}
+                    popupContent: Component { MenuPopup {} }
                 }
-            }
-        }
 
-        // 󰚰 Updates (En todas las barras para probar)
-        UpdateWidget {
-            Layout.alignment: Qt.AlignVCenter
-            Layout.leftMargin: -4
-        }
+                UpdateWidget { Layout.alignment: Qt.AlignVCenter }
 
-        // 🖥️ Workspaces
-        Row {
-            visible: isMainBar
-            spacing: 4
-            
-            Repeater {
-                model: Hyprland.workspaces
+                // --- WORKSPACES CON ICONOS (Restaurados) ---
+                Row {
+                    visible: isMainBar
+                    spacing: 6
+                    
+                    Repeater {
+                        model: Hyprland.workspaces
+                        delegate: Rectangle {
+                            id: workspaceRect
+                            required property var modelData
+                            implicitWidth: workspaceInnerRow.implicitWidth + 20
+                            implicitHeight: 30
+                            radius: 6
+                            color: modelData.active ? Purpletheme.active : Purpletheme.inactive
 
-                delegate: Rectangle {
-                    id: workspaceRect
-                    required property var modelData
-
-                    implicitWidth: workspaceRow.implicitWidth + 20
-                    implicitHeight: 30
-                    radius: 6
-
-                    color: modelData.active ? Purpletheme.active : Purpletheme.inactive
-
-                    Row {
-                        id: workspaceRow
-                        anchors.centerIn: parent
-                        spacing: 6
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: modelData.id
-                            font.pixelSize: 14
-                            font.bold: true
-                            color: Purpletheme.textPrimary
-                        }
-
-                        Repeater {
-                            model: {
-                                var windows = HyprlandData.windowList.filter(win => win.workspace.id === modelData.id);
-                                var groups = {};
-                                windows.forEach(win => {
-                                    if (!groups[win.class]) {
-                                        groups[win.class] = { className: win.class, count: 0 };
-                                    }
-                                    groups[win.class].count++;
-                                });
-                                return Object.values(groups);
-                            }
-                            
-                            delegate: Row {
-                                spacing: 2
-                                anchors.verticalCenter: parent.verticalCenter
-                                required property var modelData
-
-                                IconImage {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    source: Quickshell.iconPath(AppSearch.guessIcon(modelData.className), "image-missing")
-                                    implicitWidth: 18
-                                    implicitHeight: 18
-                                }
+                            Row {
+                                id: workspaceInnerRow
+                                anchors.centerIn: parent
+                                spacing: 6
 
                                 Text {
-                                    visible: modelData.count > 1
                                     anchors.verticalCenter: parent.verticalCenter
-                                    text: "x" + modelData.count
-                                    font.pixelSize: 10
-                                    font.bold: true
+                                    text: modelData.id
+                                    font.pixelSize: 14; font.bold: true
                                     color: Purpletheme.textPrimary
                                 }
+
+                                // Iconos de aplicaciones en el workspace
+                                Repeater {
+                                    model: {
+                                        var windows = HyprlandData.windowList.filter(win => win.workspace.id === modelData.id);
+                                        var groups = {};
+                                        windows.forEach(win => {
+                                            if (!groups[win.class]) groups[win.class] = { className: win.class, count: 0 };
+                                            groups[win.class].count++;
+                                        });
+                                        return Object.values(groups);
+                                    }
+                                    
+                                    delegate: Row {
+                                        spacing: 2
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        required property var modelData
+                                        IconImage {
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            source: Quickshell.iconPath(AppSearch.guessIcon(modelData.className), "image-missing")
+                                            implicitWidth: 18; implicitHeight: 18
+                                        }
+                                        Text {
+                                            visible: modelData.count > 1
+                                            text: "x" + modelData.count
+                                            font.pixelSize: 10; font.bold: true; color: Purpletheme.textPrimary
+                                        }
+                                    }
+                                }
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: Hyprland.dispatch("workspace " + modelData.id)
                             }
                         }
                     }
+                }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Hyprland.dispatch("workspace " + modelData.id)
-                    }
+                WindowInfo {
+                    visible: isMainBar
+                    Layout.preferredWidth: 250
                 }
             }
-        }
 
-        // Window Info
-        WindowInfo {
-            visible: isMainBar
-            Layout.preferredWidth: 200
-            Layout.alignment: Qt.AlignVCenter
-        }
+            // 2. ESPACIADOR (Empuja a los extremos)
+            Item { Layout.fillWidth: true }
 
-        // Left Spacer
-        Item {
-            Layout.fillWidth: true
-        }
+            // 3. BLOQUE DERECHA (Tu orden exacto)
+            RowLayout {
+                id: statusArea
+                spacing: 12
+                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
-        // Center Info
-        CenterInfo {
-            visible: isMainBar
-            barWindow: bar
-            Layout.alignment: Qt.AlignVCenter
-        }
+                SystrayWidget { 
+                    visible: !isMainBar 
+                    Layout.alignment: Qt.AlignVCenter
+                }
 
-        // Right Spacer
-        Item {
-            visible: isMainBar
-            Layout.fillWidth: true
-        }
-
-        RowLayout {
-            id: statusArea
-            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-            Layout.rightMargin: 12
-            spacing: 12
-
-            SystrayWidget { visible: isSecondaryBar }
-
-            CpuWidget { 
-                visible: isSecondaryBar 
-                customColor: bar.barTextColor
-            }
-            MemoryWidget { 
-                visible: isSecondaryBar 
-                customColor: bar.barTextColor
-            }
-
-            // Separator visual
-            Text {
-                visible: isSecondaryBar
-                text: "|"
-                color: Purpletheme.colMuted
-                font.pixelSize: 14
-            }
-
-            LanguageWidget {
-                Layout.alignment: Qt.AlignVCenter
-                customColor: bar.barTextColor
-            }
-
-            WifiWidget {
-                barWindow: bar
-                customColor: bar.barTextColor
-            }
-
-            BluetoothWidget {
-                barWindow: bar
-                customColor: bar.barTextColor
-            }
-            
-            PowerProfileWidget {
-                barWindow: bar
-            }
-
-            VolumeComponent {
-                Layout.alignment: Qt.AlignVCenter
-                customColor: bar.barTextColor
-            }
-
-            DropdownWidget {
-                barWindow: bar
-                popupWidth: 500
-                popupHeight: 380
-                stemAlignment: "right"
-                ClockComponent {
+                // 🔊 Volumen (Expande a la izquierda)
+                VolumeComponent {
+                    Layout.alignment: Qt.AlignVCenter
                     customColor: bar.barTextColor
                 }
-                popupContent: DashboardPopup {}
-            }
 
-            PowerWidget {
-                barWindow: bar
-                customColor: bar.barTextColor
+                // 🎵 MiniVisualizer
+                MiniVisualizer {
+                    Layout.alignment: Qt.AlignVCenter
+                    color: bar.barTextColor
+                }
+
+                // ⌨️ Layout / Idioma
+                LanguageWidget {
+                    Layout.alignment: Qt.AlignVCenter
+                    customColor: bar.barTextColor
+                }
+
+                // 🕒 Reloj con Popup
+                DropdownWidget {
+                    barWindow: bar
+                    popupWidth: 500; popupHeight: 380
+                    stemAlignment: "right"
+                    Layout.alignment: Qt.AlignVCenter
+                    ClockComponent {
+                        customColor: bar.barTextColor
+                    }
+                    popupContent: Component { DashboardPopup {} }
+                }
+
+                // 🔋 Power (Ancla Final)
+                PowerWidget {
+                    barWindow: bar
+                    Layout.alignment: Qt.AlignVCenter
+                    customColor: bar.barTextColor
+                }
             }
         }
-    }
 
-    // Click overlay to close popups - sits on top but propagates clicks
-    MouseArea {
-        anchors.fill: parent
-        propagateComposedEvents: true
-        onClicked: (mouse) => {
-            bar.closeAllPopups()
-            mouse.accepted = false
+        // --- 4. CENTRO ABSOLUTO (Independiente) ---
+        CenterInfo {
+            id: absoluteCenter
+            visible: isMainBar
+            barWindow: bar
+            anchors.centerIn: parent
+        }
+
+        // Overlay para cerrar popups al tocar el fondo de la barra
+        MouseArea {
+            anchors.fill: parent
+            z: -1 // Enviar al fondo para no interceptar clics de widgets
+            onClicked: bar.closeAllPopups()
         }
     }
-}
 }

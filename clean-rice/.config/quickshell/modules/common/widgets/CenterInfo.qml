@@ -373,7 +373,7 @@ Item {
             var _trigger = centerInfo.popupVisible + centerInfo.x + centerInfo.y
             return centerInfo.mapToItem(null, 0, 0).x + centerText.x + weatherPill.x + weatherPill.width/2 - width/2
         }
-        anchor.rect.y: 32
+        anchor.rect.y: barWindow.height
         implicitWidth: 280
         implicitHeight: contentColumn.implicitHeight + 12 + 32
         color: "transparent"

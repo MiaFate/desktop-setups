@@ -37,8 +37,8 @@ for pid in $(pidof waybar rofi swaync ags swaybg); do
 done
 
 #Restart waybar
-sleep 1
-waybar &
+#sleep 1
+#waybar &
 
 # relaunch swaync
 sleep 0.5
