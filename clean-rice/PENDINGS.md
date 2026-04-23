@@ -27,3 +27,13 @@ Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para ll
 - [ ] **Optimización de Visualizador**:
     - *Problema*: Consumo de CPU muy alto (~20%).
     - *Solución*: Rediseñar el sistema de dibujo (Canvas) para evitar crear objetos en cada frame o buscar alternativas más ligeras que Cava + QML.
+
+## 🚀 Optimizaciones de Aplicaciones y Widgets
+- [ ] **Alternativas a Apps Pesadas**:
+    - *Discord*: Buscar clientes más ligeros (Vesktop con optimizaciones, Discord-Screen-Share o web wrapper).
+    - *Spotify*: Migrar de Snap a AUR/Flatpak o probar clientes CLI/Ligeros (ncspot, spotify-player).
+- [ ] **Migración de Widgets (Eww -> Quickshell)**:
+    - *Reloj de Escritorio*: Reemplazar el widget de reloj de Eww por una versión nativa en Quickshell para eliminar la dependencia de Eww.
+    - *Fuentes*: Buscar una fuente más estética/stylized para el nuevo Desktop Clock.
+- [ ] **Optimización de Fondo de Pantalla**:
+    - *awww*: Investigar e integrar `awww` como alternativa ligera para fondos animados/interactivos.

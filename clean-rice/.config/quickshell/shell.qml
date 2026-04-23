@@ -12,6 +12,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import "./services/"
+import "./modules/common/widgets/"
 
 
 ShellRoot {
@@ -30,4 +31,5 @@ ShellRoot {
     Loader { sourceComponent: Bar {} }
     Loader { active: enableWallpaper; sourceComponent: Wallpaper {} }
     Visualizer {}
+    DesktopClock {}
 }
