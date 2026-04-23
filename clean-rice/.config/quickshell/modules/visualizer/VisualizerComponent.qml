@@ -17,24 +17,44 @@ Item {
 
     // --- IMPLEMENTACIÓN OPTIMIZADA ---
     
-    // Estilo 1: BARS (Rectángulos nativos - Ultra eficiente)
-    Row {
-        id: barsContainer
+    // Estilo 1: BARS (Shape)
+    Shape {
+        id: barsVisualizer
         anchors.fill: parent
-        spacing: 1
         visible: VisualizerSettings.style === "bars"
         
-        Repeater {
-            model: root.audioData.length
-            Rectangle {
-                width: (barsContainer.width / root.audioData.length) - barsContainer.spacing
-                height: (root.audioData[index] / 100) * barsContainer.height
-                anchors.bottom: parent.bottom
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: Purpletheme.primary }
-                    GradientStop { position: 1.0; color: "transparent" }
+        ShapePath {
+            strokeColor: "transparent"
+            fillGradient: LinearGradient {
+                y1: 0; y2: barsVisualizer.height
+                GradientStop { position: 0.0; color: Purpletheme.primary }
+                GradientStop { position: 1.0; color: "transparent" }
+            }
+            
+            startX: 0; startY: barsVisualizer.height
+            
+            PathPolyline {
+                path: {
+                    var data = root.audioData
+                    var w = barsVisualizer.width
+                    var h = barsVisualizer.height
+                    var n = Math.max(1, data.length)
+                    var spacing = 1
+                    var barWidth = (w / n) - spacing
+                    var points = []
+                    
+                    points.push(Qt.point(0, h))
+                    for (var i = 0; i < data.length; i++) {
+                        var x = i * (barWidth + spacing)
+                        var val = (data[i] / 100) * h
+                        points.push(Qt.point(x, h))
+                        points.push(Qt.point(x, h - val))
+                        points.push(Qt.point(x + barWidth, h - val))
+                        points.push(Qt.point(x + barWidth, h))
+                    }
+                    points.push(Qt.point(w, h))
+                    return points
                 }
-                Behavior on height { NumberAnimation { duration: 80; easing.type: Easing.OutQuad } }
             }
         }
     }
@@ -107,7 +127,10 @@ Item {
                     verticalAlignment: Image.AlignBottom
                 }
                 
-                Behavior on height { NumberAnimation { duration: 80; easing.type: Easing.OutQuad } }
+                Behavior on height { 
+                    enabled: root.visible
+                    NumberAnimation { duration: 80; easing.type: Easing.OutQuad } 
+                }
             }
         }
     }

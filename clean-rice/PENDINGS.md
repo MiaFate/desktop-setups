@@ -14,15 +14,14 @@ Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para ll
 ## 🛠️ Utilidades
 - [x] **hyprpicker**: Selector de colores integrado en el Control Center. [Completado]
 - [x] **hyprshot**: Capturas de pantalla integradas en el Control Center. [Completado]
-- [ ] **hyprpolkitagent**: Agente de autenticación visual.
-    - *Cómo agregar*: Añadir al `autostart.conf`.
+- [x] **hyprpolkitagent**: Agente de autenticación visual. [Completado]
+    - *Acción*: Habilitado y en ejecución (`systemctl --user enable --now hyprpolkitagent`).
 
 ## 📊 Barra y Sistema
 - [ ] **Quickshell (Avanzado)**: Seguir personalizando la barra actual.
     - *Tareas*: Dashboard, control de volumen visual, selector de perfiles de energía.
-- [ ] **Optimización de Visualizador**:
-    - *Problema*: Consumo de CPU muy alto (~20%).
-    - *Solución*: Rediseñar el sistema de dibujo (Canvas) para evitar crear objetos en cada frame o buscar alternativas más ligeras que Cava + QML.
+- [x] **Optimización de Visualizador**:
+    - *Estado*: ✅ **Completado**. CPU usage reducido a ~6.6% usando native shapes y shaders en Quickshell.
 
 ## 🚀 Optimizaciones de Aplicaciones y Widgets
 - [ ] **Alternativas a Apps Pesadas**:
@@ -33,3 +32,8 @@ Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para ll
     - *Fuentes*: Buscar una fuente más estética/stylized para el nuevo Desktop Clock.
 - [x] **Optimización de Fondo de Pantalla**:
     - *awww*: Migrado de Wallpaper Engine a `awww` para reducir uso de VRAM (~1.3GB ahorrados) y CPU. [Completado]
+
+## ⚡ Optimización de Arranque Extrema
+- [x] **Eliminar Snaps**: Purgar `snapd` para quitar los mounts que retrasaban el inicio. [Completado]
+- [x] **GRUB Instantáneo**: Configurado `TIMEOUT=0` y `hidden`. [Completado]
+- [ ] **BIOS Fast Boot**: Activar en la placa MSI para reducir los 15s de Firmware.
