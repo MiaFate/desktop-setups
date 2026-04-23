@@ -59,6 +59,7 @@ Item {
                     var h = root.height
                     var barWidth = w / Math.max(1, data.length)
                     var points = []
+                    points.push(Qt.point(0, h))
                     for (var i = 0; i < data.length; i++) {
                         points.push(Qt.point(i * barWidth, h - (data[i] / 100) * h))
                     }
@@ -69,41 +70,45 @@ Item {
         }
     }
 
-    // Estilo 3: CYBER (Canvas optimizado)
+    // --- OPTIMIZACIÓN CYBER (Tiled Image) ---
     Canvas {
-        id: complexVisualizer
-        anchors.fill: parent
-        visible: VisualizerSettings.style === "cyber"
+        id: cyberPattern
+        width: 6; height: 6
+        visible: false
+        renderTarget: Canvas.Image
+        property string patternUrl: ""
         onPaint: {
             var ctx = getContext("2d")
-            ctx.reset()
-            var data = root.audioData
-            if (data.length === 0) return
-            
-            var w = width
-            var h = height
-            var barWidth = w / data.length
-            
-            var blockH = 4
-            var space = 1
             ctx.fillStyle = Purpletheme.primary
-            for (var i = 0; i < data.length; i++) {
-                var barH = (data[i] / 100) * h
-                var blocks = Math.floor(barH / (blockH + space))
-                for (var j = 0; j < blocks; j++) {
-                    var y = h - (j * (blockH + space)) - blockH
-                    ctx.globalAlpha = (j / blocks) * 0.8 + 0.2
-                    ctx.fillRect(i * barWidth + 1, y, barWidth - 2, blockH)
-                }
-            }
-            ctx.globalAlpha = 1.0
+            ctx.fillRect(0, 0, 6, 4) // Bloque de 4px y 2px de espacio
+            patternUrl = toDataURL()
         }
+        Component.onCompleted: requestPaint()
+    }
+
+    Row {
+        id: cyberVisualizer
+        anchors.fill: parent
+        spacing: 1
+        visible: VisualizerSettings.style === "cyber"
         
-        Timer {
-            interval: 41
-            running: complexVisualizer.visible
-            repeat: true
-            onTriggered: complexVisualizer.requestPaint()
+        Repeater {
+            model: root.audioData.length
+            Item {
+                width: (cyberVisualizer.width / root.audioData.length) - cyberVisualizer.spacing
+                height: (root.audioData[index] / 100) * cyberVisualizer.height
+                anchors.bottom: parent.bottom
+                clip: true
+                
+                Image {
+                    anchors.fill: parent
+                    source: cyberPattern.patternUrl
+                    fillMode: Image.Tile
+                    verticalAlignment: Image.AlignBottom
+                }
+                
+                Behavior on height { NumberAnimation { duration: 80; easing.type: Easing.OutQuad } }
+            }
         }
     }
 }

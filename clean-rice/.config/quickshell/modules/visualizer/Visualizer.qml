@@ -86,16 +86,19 @@ PanelWindow {
                     var h = visualizerWindow.height
                     var barWidth = w / Math.max(1, data.length)
                     var points = []
+                    // Asegurar anclaje a la base al inicio
+                    points.push(Qt.point(0, h))
                     for (var i = 0; i < data.length; i++) {
                         points.push(Qt.point(i * barWidth, h - (data[i] / 100) * h))
                     }
+                    // Asegurar anclaje a la base al final
                     points.push(Qt.point(w, h))
                     return points
                 }
             }
         }
         
-        // Efecto de brillo/relleno opcional
+        // Efecto de brillo/relleno
         ShapePath {
             fillGradient: LinearGradient {
                 y1: 0; y2: wavesVisualizer.height
@@ -112,6 +115,7 @@ PanelWindow {
                     var h = visualizerWindow.height
                     var barWidth = w / Math.max(1, data.length)
                     var points = []
+                    points.push(Qt.point(0, h))
                     for (var i = 0; i < data.length; i++) {
                         points.push(Qt.point(i * barWidth, h - (data[i] / 100) * h))
                     }
@@ -122,41 +126,47 @@ PanelWindow {
         }
     }
 
-    // Estilo 3: CYBER (Canvas - Sigue optimizado con un Timer más lento)
+    // --- OPTIMIZACIÓN CYBER (Tiled Image - Super eficiente en Qt 6) ---
+    // Generamos un bloque patrón una sola vez
     Canvas {
-        id: complexVisualizer
-        anchors.fill: parent
-        visible: VisualizerSettings.enabled && VisualizerSettings.style === "cyber"
+        id: cyberPattern
+        width: 10; height: 10
+        visible: false
+        renderTarget: Canvas.Image
+        property string patternUrl: ""
         onPaint: {
             var ctx = getContext("2d")
-            ctx.reset()
-            var data = visualizerWindow.audioData
-            if (data.length === 0) return
-            
-            var w = width
-            var h = height
-            var barWidth = w / data.length
-            
-            var blockH = 6
-            var space = 2
             ctx.fillStyle = Purpletheme.primary
-            for (var i = 0; i < data.length; i++) {
-                var barH = (data[i] / 100) * h
-                var blocks = Math.floor(barH / (blockH + space))
-                for (var j = 0; j < blocks; j++) {
-                    var y = h - (j * (blockH + space)) - blockH
-                    ctx.globalAlpha = (j / blocks) * 0.8 + 0.2
-                    ctx.fillRect(i * barWidth + 1, y, barWidth - 2, blockH)
-                }
-            }
-            ctx.globalAlpha = 1.0
+            ctx.fillRect(0, 0, 10, 7) // Bloque de 7px y 3px de espacio
+            patternUrl = toDataURL()
         }
+        Component.onCompleted: requestPaint()
+    }
+
+    Row {
+        id: cyberVisualizer
+        anchors.fill: parent
+        anchors.margins: 2
+        spacing: 2
+        visible: VisualizerSettings.enabled && VisualizerSettings.style === "cyber"
         
-        Timer {
-            interval: 41 // ~24fps
-            running: complexVisualizer.visible
-            repeat: true
-            onTriggered: complexVisualizer.requestPaint()
+        Repeater {
+            model: visualizerWindow.audioData.length
+            Item {
+                width: (cyberVisualizer.width / visualizerWindow.audioData.length) - cyberVisualizer.spacing
+                height: (visualizerWindow.audioData[index] / 100) * cyberVisualizer.height
+                anchors.bottom: parent.bottom
+                clip: true
+                
+                Image {
+                    anchors.fill: parent
+                    source: cyberPattern.patternUrl
+                    fillMode: Image.Tile
+                    verticalAlignment: Image.AlignBottom
+                }
+                
+                Behavior on height { NumberAnimation { duration: 80; easing.type: Easing.OutQuad } }
+            }
         }
     }
 }
