@@ -16,9 +16,8 @@ Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para ll
 - [x] **hyprshot**: Capturas de pantalla integradas en el Control Center. [Completado]
 - [x] **hyprpolkitagent**: Agente de autenticación visual. [Completado]
     - *Acción*: Habilitado y en ejecución (`systemctl --user enable --now hyprpolkitagent`).
-- [ ] **Inhibidor de Sueño (Modo Facultad/Remoto)**:
-    - *Atajo*: `Super + Alt + I` (Ejecuta `Hypridle.sh toggle`).
-    - *Quickshell*: Agregar botón al Control Center para activar/desactivar visualmente el bloqueo y la suspensión.
+- [x] **Inhibidor de Sueño (Modo Facultad/Remoto)**: [Completado]
+    - *Control*: Botón "**No Idle**" en el Control Center con cambio de estado basado en eventos.
 
 ## 📊 Barra y Sistema
 - [ ] **Quickshell (Avanzado)**: Seguir personalizando la barra actual.

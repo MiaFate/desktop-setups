@@ -60,7 +60,7 @@ Variants {
                 DropdownWidget {
                     id: menuDropdown
                     barWindow: bar
-                    popupWidth: 350; popupHeight: 650
+                    popupWidth: 360; popupHeight: 750
                     stemAlignment: "left"
                     MenuWidget {}
                     popupContent: Component { MenuPopup {} }

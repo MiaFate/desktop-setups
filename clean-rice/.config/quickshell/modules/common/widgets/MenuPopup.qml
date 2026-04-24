@@ -7,8 +7,8 @@ import "../../visualizer"
 
 Rectangle {
     id: root
-    implicitWidth: 350
-    implicitHeight: 420
+    implicitWidth: 360
+    implicitHeight: 750
     color: "transparent"
 
     // Hyprshade Logic
@@ -38,7 +38,24 @@ Rectangle {
         shotProc.running = true
     }
 
-    Component.onCompleted: updateShader()
+    // Hypridle Logic
+    property bool hypridleRunning: true
+    function updateIdleStatus() { checkIdleProc.running = true }
+    Process {
+        id: checkIdleProc
+        command: ["pgrep", "-x", "hypridle"]
+        onExited: exitCode => {
+            hypridleRunning = (exitCode === 0)
+            console.log("Hypridle running status: " + hypridleRunning)
+        }
+    }
+    Process { id: toggleIdleProc; command: ["/home/mia/.config/hypr/scripts/Hypridle.sh", "toggle"] }
+    Timer { id: updateIdleStatusTimer; interval: 400; onTriggered: updateIdleStatus() }
+
+    Component.onCompleted: {
+        updateShader()
+        updateIdleStatus()
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -185,6 +202,33 @@ Rectangle {
                     }
                 }
                 Text { text: "Shot"; font.pixelSize: 9; font.bold: true; color: Purpletheme.textMuted; Layout.alignment: Qt.AlignHCenter }
+            }
+
+            // No Idle (Sleep Inhibit)
+            ColumnLayout {
+                spacing: 8
+                Rectangle {
+                    id: idleBtn
+                    width: 55; height: 55; radius: 14
+                    color: !hypridleRunning ? Purpletheme.active : Purpletheme.bgAlt
+                    border.color: !hypridleRunning ? Purpletheme.primary : Purpletheme.borderSoft
+                    border.width: 1
+                    Text {
+                        anchors.centerIn: parent
+                        text: !hypridleRunning ? "󰛊" : "󰖔" // Taza de café vs Luna
+                        font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 26
+                        color: !hypridleRunning ? "white" : Purpletheme.textMuted
+                    }
+                    MouseArea { 
+                        anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            toggleIdleProc.running = true
+                            hypridleRunning = !hypridleRunning // Cambio local instantáneo
+                            updateIdleStatusTimer.restart() // Verificación por las dudas
+                        }
+                    }
+                }
+                Text { text: "No Idle"; font.pixelSize: 9; font.bold: true; color: Purpletheme.textMuted; Layout.alignment: Qt.AlignHCenter }
             }
         }
 
