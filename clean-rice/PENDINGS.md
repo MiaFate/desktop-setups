@@ -7,8 +7,9 @@ Aquí listamos las aplicaciones del ecosistema Hypr que podemos integrar para ll
 - [x] **Hypridle**: Configurar auto-bloqueo y suspensión tras X minutos de inactividad.
 
 ## 🎨 Estética y Efectos
-- [x] **hyprshade**: Filtros de pantalla (Luz nocturna 3400K, Grayscale, Vibrance). [Completado]
-    - *Integración*: Botones añadidos al Control Center de Quickshell.
+- [x] **hyprshade**: Filtros de pantalla (Luz nocturna, Grayscale). [Completado]
+    - *Integración*: Botones en Control Center y **Modo Noche Automático** (19:00 - 07:00) vía systemd timers.
+    - *Backup*: Configuración y timers migrados a `dotfiles`.
 - [x] **hyprcursor**: Mejora de cursores en Wayland con Bibata-Modern-Ice. [Completado]
 
 ## 🛠️ Utilidades

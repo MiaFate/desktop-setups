@@ -1,0 +1,9 @@
+[Unit]
+Description=Apply hyprshade auto configuration
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/hyprshade auto
+
+[Install]
+WantedBy=default.target
