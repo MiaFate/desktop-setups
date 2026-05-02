@@ -99,7 +99,7 @@ output "DP-2" {
 // https://niri-wm.github.io/niri/Configuration:-Layout
 layout {
     // Set gaps around windows in logical pixels.
-    gaps 10
+    gaps 6
 
     // When to center a column when changing focus, options are:
     // - "never", default behavior, focusing an off-screen column will keep at the left
@@ -290,7 +290,7 @@ animations {
     // off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
-    // slowdown 3.0
+     slowdown 3.0
 }
 
 // Window rules let you adjust behavior for individual windows.
@@ -335,6 +335,17 @@ window-rule {
     clip-to-geometry true
 }
 
+window-rule {
+    // Filtramos por el app-id que le daremos a la terminal
+    match app-id="floating_term"
+    
+    open-floating true
+    
+    // Opcional: Define el tamaño y posición inicial
+    default-column-width { fixed 1000; }
+    default-window-height { fixed 600; }
+}
+
 binds {
     // Keys consist of modifiers separated by + signs, followed by an XKB key name
     // in the end. To find an XKB name for a particular key, you may use a program
@@ -351,9 +362,11 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     // Suggested binds for running programs: terminal, app launcher, screwen locker.
-    //Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
+    //Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty" "-e"; }
+    // Ejemplo con Mod+Shift+Enter
+    Mod+T { spawn "kitty" "--class" "floating_term"; }
     // Cambiar la ventana actual entre modo tiling y modo flotante
-    Mod+T { toggle-window-floating; }
+    //Mod+T hotkey-overlay-title="floating terminal"{ spawn "alacrityy"; }
     Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Mod+Space hotkey-overlay-title="Run an Application: Rofi" { spawn-sh "pkill rofi || true && rofi -show drun -modi drun,filebrowser,run,window"; }
