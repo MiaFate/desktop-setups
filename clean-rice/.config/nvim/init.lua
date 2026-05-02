@@ -126,6 +126,7 @@ require("lazy").setup({
       require("neo-tree").setup({
         window = {
           mappings = {
+            ["h"] = "navigate_up",
             ["l"] = "open",
             [";"] = "close_node",
           }
