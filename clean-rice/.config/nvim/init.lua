@@ -58,7 +58,7 @@ require("lazy").setup({
     build = ":TSUpdate",
     main = "nvim-treesitter",
     opts = {
-      ensure_installed = { "lua", "rust", "toml" },
+      ensure_installed = { "lua", "rust", "toml", "markdown", "markdown_inline" },
       auto_install = true,
       highlight = {
         enable = true,
@@ -180,6 +180,57 @@ require("lazy").setup({
     },
   },
 
+  -- Telescope (Fuzzy Finder)
+  {
+    'nvim-telescope/telescope.nvim', tag = '0.1.8',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local builtin = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Buscar archivos' })
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Buscar texto (Grep)' })
+    end
+  },
+
+  -- Snacks.nvim (Utilities)
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      terminal = { enabled = true },
+      notifier = { enabled = true },
+    },
+  },
+
+  -- Gemini CLI Integration
+  {
+    "vaijab/gemini-cli.nvim",
+    name = "gemini-mcp", -- Nombre único para evitar conflicto
+    build = "go build -o bin/gemini-server ./cmd/gemini-server",
+    event = "VeryLazy",
+    opts = {},
+    config = function(_, opts)
+      require("gemini").setup(opts)
+      -- Los comandos de vaijab suelen ser :GeminiDiff*
+      vim.keymap.set("n", "<leader>gy", "<cmd>GeminiDiffAccept<cr>", { desc = "Aceptar Cambios Gemini" })
+      vim.keymap.set("n", "<leader>gn", "<cmd>GeminiDiffDeny<cr>", { desc = "Rechazar Cambios Gemini" })
+    end
+  },
+
+  {
+    "marcinjahn/gemini-cli.nvim",
+    -- Este plugin se registra como 'gemini-cli.nvim' por defecto
+    dependencies = { "folke/snacks.nvim" },
+    opts = {
+      gemini_cmd = "gemini",
+    },
+    keys = {
+      { "<leader>gt", "<cmd>Gemini toggle<cr>", desc = "Toggle Gemini CLI", mode = { "n", "t" } },
+      { "<leader>ga", "<cmd>Gemini ask<cr>", desc = "Preguntar a Gemini", mode = { "n", "v" } },
+      { "<leader>gf", "<cmd>Gemini add<cr>", desc = "Agregar archivo a Gemini", mode = "n" },
+    },
+  },
+
   -- Which-key
   {
     "folke/which-key.nvim",
@@ -188,12 +239,14 @@ require("lazy").setup({
       vim.o.timeoutlen = 300
       local wk = require("which-key")
       wk.setup {}
-      
+
       -- Documentar los atajos en Which-key
       wk.add({
         { "<leader>e", desc = "Explorador de Archivos (Neo-tree)", mode = "n" },
         { "<leader>a", desc = "Acciones de código (LSP)", mode = "n" },
         { "<leader>v", group = "LÖVE 2D", mode = "n" },
+        { "<leader>g", group = "Gemini AI", mode = "n" },
+        { "<leader>f", group = "Fuzzy Finder (Telescope)", mode = "n" },
         { "<C-l>", desc = "Aceptar sugerencia de Copilot", mode = "i" },
         { "<CR>", desc = "Aceptar autocompletado", mode = "i" },
       })
@@ -247,12 +300,30 @@ pcall(function()
     },
   })
   require("mason-lspconfig").setup({
-    ensure_installed = { "pyright" },
+    ensure_installed = { "pyright", "lua_ls" },
     automatic_installation = true,
   })
   require("mason-lspconfig").setup_handlers {
     function(server_name)
       require("lspconfig")[server_name].setup {}
+    end,
+    ["lua_ls"] = function()
+      require("lspconfig").lua_ls.setup {
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { "vim" },
+            },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
+            telemetry = {
+              enable = false,
+            },
+          },
+        },
+      }
     end,
     ["rust_analyzer"] = function()
       require("lspconfig").rust_analyzer.setup {
@@ -273,7 +344,7 @@ vim.cmd("set expandtab")
 vim.cmd("set shiftwidth=4")
 vim.opt.completeopt = { 'menuone', 'noselect', 'noinsert' }
 vim.opt.shortmess = vim.opt.shortmess + { c = true }
-vim.api.nvim_set_option('updatetime', 300)
+vim.o.updatetime = 300
 
 vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
 -- ==============================
@@ -300,7 +371,7 @@ vim.diagnostic.config({
   severity_sort = false,
   float = {
     border = 'rounded',
-    source = 'always',
+    source = true,
     header = '',
     prefix = '',
   },
@@ -325,3 +396,21 @@ vim.g.loaded_perl_provider = 0
 
 -- Disable Python3 provider (not needed for this config)
 vim.g.loaded_python3_provider = 0
+
+-- ==============================
+--  Terminal Mappings
+-- ==============================
+-- Usar Esc para salir del modo terminal de forma intuitiva en todos los terminales
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = vim.api.nvim_create_augroup("custom-terminal-settings", { clear = true }),
+  callback = function()
+    local opts = { buffer = 0, noremap = true, silent = true }
+    vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], opts)
+    -- Navegación directa entre ventanas desde el terminal
+    vim.keymap.set('t', '<C-h>', [[<C-\><C-n><C-w>h]], opts)
+    vim.keymap.set('t', '<C-j>', [[<C-\><C-n><C-w>j]], opts)
+    vim.keymap.set('t', '<C-k>', [[<C-\><C-n><C-w>k]], opts)
+    vim.keymap.set('t', '<C-l>', [[<C-\><C-n><C-w>l]], opts)
+  end,
+})
+
