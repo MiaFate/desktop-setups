@@ -1,30 +1,31 @@
+-- Set leader key before anything else
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 -- ==============================
---  Bootstrap packer.nvim
+--  Bootstrap lazy.nvim
 -- ==============================
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
 end
-
-local packer_bootstrap = ensure_packer()
-
+vim.opt.rtp:prepend(lazypath)
 
 -- ==============================
 --  Plugins
 -- ==============================
-require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
-
+require("lazy").setup({
   -- Rose Pine colorscheme
-  use({
-    'rose-pine/neovim',
-    as = 'rose-pine',
+  {
+    "rose-pine/neovim",
+    name = "rose-pine",
     config = function()
       require("rose-pine").setup({
         variant = "moon",
@@ -32,55 +33,54 @@ require('packer').startup(function(use)
       })
       vim.cmd("colorscheme rose-pine")
     end
-  })
+  },
 
   -- Mason
-  use 'williamboman/mason.nvim'
-  use 'williamboman/mason-lspconfig.nvim'
+  { "williamboman/mason.nvim" },
+  { "williamboman/mason-lspconfig.nvim" },
 
   -- LSP setup
-  use 'neovim/nvim-lspconfig'
+  { "neovim/nvim-lspconfig" },
 
   -- Completion (nvim-cmp + sources)
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-nvim-lua'
-  use 'hrsh7th/cmp-nvim-lsp-signature-help'
-  use 'hrsh7th/cmp-vsnip'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/vim-vsnip'
+  { "hrsh7th/nvim-cmp" },
+  { "hrsh7th/cmp-nvim-lsp" },
+  { "hrsh7th/cmp-nvim-lua" },
+  { "hrsh7th/cmp-nvim-lsp-signature-help" },
+  { "hrsh7th/cmp-vsnip" },
+  { "hrsh7th/cmp-path" },
+  { "hrsh7th/cmp-buffer" },
+  { "hrsh7th/vim-vsnip" },
 
   -- Treesitter
-  use({
-    'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
-    config = function()
-      require('nvim-treesitter.configs').setup {
-        ensure_installed = { "lua", "rust", "toml" },
-        auto_install = true,
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = false,
-        },
-        indent = { enable = true },
-      }
-    end
-  })
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    main = "nvim-treesitter",
+    opts = {
+      ensure_installed = { "lua", "rust", "toml" },
+      auto_install = true,
+      highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+      },
+      indent = { enable = true },
+    }
+  },
 
   -- Lualine
-  use({
-    'nvim-lualine/lualine.nvim',
-    requires = { 'nvim-tree/nvim-web-devicons' },
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       local colors = {
-        blue   = '#89b4fa',
-        cyan   = '#89dceb',
-        black  = '#1e1e2e',
-        white  = '#a6adc8',
-        red    = '#f38ba8',
-        violet = '#b4befe',
-        grey   = '#6c7086',
+        blue   = "#89b4fa",
+        cyan   = "#89dceb",
+        black  = "#1e1e2e",
+        white  = "#a6adc8",
+        red    = "#f38ba8",
+        violet = "#b4befe",
+        grey   = "#6c7086",
       }
 
       local bubbles_theme = {
@@ -99,44 +99,107 @@ require('packer').startup(function(use)
         },
       }
 
-      require('lualine').setup {
+      require("lualine").setup {
         options = {
           theme = bubbles_theme,
-          component_separators = '|',
-          section_separators = { left = '', right = '' },
+          component_separators = "|",
+          section_separators = { left = "", right = "" },
         },
       }
     end
-  })
+  },
 
   -- Neo-tree
-  use({
+  {
     "nvim-neo-tree/neo-tree.nvim",
-    branch = "v2.x",
-    requires = {
+    branch = "v3.x",
+    dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
-    }
-  })
+    },
+    config = function()
+      -- Atajo de teclado para abrir/cerrar Neo-tree
+      vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", { noremap = true, silent = true })
+
+      -- Configuración de navegación dentro de Neo-tree
+      require("neo-tree").setup({
+        window = {
+          mappings = {
+            ["l"] = "open",
+            [";"] = "close_node",
+          }
+        }
+      })
+    end
+  },
 
   -- Copilot
-  use({
+  {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
-  })
+    config = function()
+      require("copilot").setup({
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          debounce = 75,
+          keymap = {
+            accept = "<C-l>",
+            accept_word = false,
+            accept_line = false,
+            next = "<M-]>",
+            prev = "<M-[>",
+            dismiss = "<C-]>",
+          },
+        },
+        panel = { enabled = false },
+      })
+    end,
+  },
 
-  use({ "xiyaowong/transparent.nvim" })
+  -- Transparent
+  { "xiyaowong/transparent.nvim" },
 
-  -- Icon support (mini.icons for better compatibility with which-key and other plugins)
-  use({ 'echasnovski/mini.icons', version = false })
+  -- Mini icons
+  { "echasnovski/mini.icons", version = false },
 
-  -- Auto-sync packer
-  if packer_bootstrap then
-    require('packer').sync()
-  end
-end)
+  -- nvim-nio (Librería requerida por otros plugins)
+  { "nvim-neotest/nvim-nio" },
+
+  -- LÖVE 2D
+  {
+    "S1M0N38/love2d.nvim",
+    cmd = "LoveRun",
+    opts = {},
+    keys = {
+      { "<leader>v", desc = "LÖVE" },
+      { "<leader>vv", "<cmd>LoveRun<cr>", desc = "Run LÖVE" },
+      { "<leader>vs", "<cmd>LoveStop<cr>", desc = "Stop LÖVE" },
+    },
+  },
+
+  -- Which-key
+  {
+    "folke/which-key.nvim",
+    config = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+      local wk = require("which-key")
+      wk.setup {}
+      
+      -- Documentar los atajos en Which-key
+      wk.add({
+        { "<leader>e", desc = "Explorador de Archivos (Neo-tree)", mode = "n" },
+        { "<leader>a", desc = "Acciones de código (LSP)", mode = "n" },
+        { "<leader>v", group = "LÖVE 2D", mode = "n" },
+        { "<C-l>", desc = "Aceptar sugerencia de Copilot", mode = "i" },
+        { "<CR>", desc = "Aceptar autocompletado", mode = "i" },
+      })
+    end
+  }
+})
 
 -- ==============================
 --  Completion (nvim-cmp)
@@ -168,27 +231,7 @@ cmp.setup({
   })
 })
 
--- ==============================
---  Copilot
--- ==============================
-pcall(function()
-  require("copilot").setup({
-    suggestion = {
-      enabled = true,
-      auto_trigger = true,
-      debounce = 75,
-      keymap = {
-        accept = "<C-l>",
-        accept_word = false,
-        accept_line = false,
-        next = "<M-]>",
-        prev = "<M-[>",
-        dismiss = "<C-]>",
-      },
-    },
-    panel = { enabled = false },
-  })
-end)
+
 
 -- ==============================
 --  LSP Setup
@@ -203,7 +246,10 @@ pcall(function()
       },
     },
   })
-  require("mason-lspconfig").setup()
+  require("mason-lspconfig").setup({
+    ensure_installed = { "pyright" },
+    automatic_installation = true,
+  })
   require("mason-lspconfig").setup_handlers {
     function(server_name)
       require("lspconfig")[server_name].setup {}
@@ -247,7 +293,7 @@ sign({ name = 'DiagnosticSignHint', text = '' })
 sign({ name = 'DiagnosticSignInfo', text = '' })
 
 vim.diagnostic.config({
-  virtual_text = false,
+  virtual_text = true,
   signs = true,
   update_in_insert = true,
   underline = true,
