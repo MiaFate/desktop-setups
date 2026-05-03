@@ -52,7 +52,7 @@ input {
         // off
         // natural-scroll
         // accel-speed 0.2
-        // accel-profile "flat"
+        accel-profile "flat"
         // scroll-method "no-scroll"
     }
 
@@ -359,17 +359,18 @@ binds {
 
     // Mod-Shift-/, which is usually the same as Mod-?,
     // shows a list of important hotkeys.
-    Mod+Shift+Slash { show-hotkey-overlay; }
+    Mod+Shift+Slash hotkey-overlay-title="niri shortcuts help" { show-hotkey-overlay; }
 
     // Suggested binds for running programs: terminal, app launcher, screwen locker.
     //Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty" "-e"; }
     // Ejemplo con Mod+Shift+Enter
-    Mod+T { spawn "kitty" "--class" "floating_term"; }
+    Mod+T hotkey-overlay-title="Open floating terminal" { spawn "kitty" "--class" "floating_term"; }
     // Cambiar la ventana actual entre modo tiling y modo flotante
     //Mod+T hotkey-overlay-title="floating terminal"{ spawn "alacrityy"; }
     Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
-    Mod+Space hotkey-overlay-title="Run an Application: Rofi" { spawn-sh "pkill rofi || true && rofi -show drun -modi drun,filebrowser,run,window"; }
+    Mod+Space hotkey-overlay-title="open menu" { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
+    //Mod+Space hotkey-overlay-title="Run an Application: Rofi" { spawn-sh "pkill rofi || true && rofi -show drun -modi drun,filebrowser,run,window"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
     Mod+N hotkey-overlay-title="Notification Center: swaync" { spawn-sh "swaync-client -t -sw"; }
     Mod+A hotkey-overlay-title="Overview: quickshell" { spawn-sh "quickshell:overviewToggle"; }
