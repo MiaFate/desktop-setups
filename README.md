@@ -43,6 +43,8 @@ Desde adentro de la carpeta `~/dotfiles`, simplemente ejecuta:
 stow desktop-quickshell
 ```
 
+*(Nota: Aunque la carpeta se llama `clean-rice`, se suele usar el nombre del target de stow. Consulta `clean-rice/FONTS.md` para detalles sobre la tipografía del sistema).*
+
 ¡Listo! Stow acaba de crear hologramas (enlaces simbólicos) de todas las configuraciones directo a tu `~/.config/`. 
 
 ### 4. Recargar el Entorno
